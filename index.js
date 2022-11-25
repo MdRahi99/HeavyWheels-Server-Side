@@ -67,12 +67,12 @@ async function run(){
         });
 
         // buyers section api's
-        app.get('/orders', async(req, res) => {
+        app.get('/orders', verifyJWT, async(req, res) => {
             const email=req.query.email;
-            // const decodedEmail=req.decoded.email;
-            // if(email !== decodedEmail){
-            //     return res.status(403).send({message: "forbidden access"});
-            // }
+            const decodedEmail=req.decoded.email;
+            if(email !== decodedEmail){
+                return res.status(403).send({message: "forbidden access"});
+            }
             const query={email:email};
             const orders=await myOrdersList.find(query).toArray();
             res.send(orders);
