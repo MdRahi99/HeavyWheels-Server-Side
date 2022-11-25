@@ -67,18 +67,18 @@ async function run(){
         });
 
         // buyers section api's
-        app.get('/myOrders', verifyJWT, async(req, res) => {
+        app.get('/orders', async(req, res) => {
             const email=req.query.email;
-            const decodedEmail=req.decoded.email;
-            if(email !== decodedEmail){
-                return res.status(403).send({message: "forbidden access"});
-            }
+            // const decodedEmail=req.decoded.email;
+            // if(email !== decodedEmail){
+            //     return res.status(403).send({message: "forbidden access"});
+            // }
             const query={email:email};
             const orders=await myOrdersList.find(query).toArray();
             res.send(orders);
         });
 
-        app.post('/myOrders', async (req, res) => {
+        app.post('/orders', async (req, res) => {
             const orders = req.body;
             const query = {
                 name: orders.name,
@@ -101,6 +101,12 @@ async function run(){
         });
 
         // users
+        app.get('/users', async (req, res) => {
+            const query = {};
+            const users = await usersCollections.find(query).toArray();
+            res.send(users);
+        });
+
         app.post('/users', async(req, res) => {
             const user = req.body;
             const result = await usersCollections.insertOne(user);
