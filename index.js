@@ -99,6 +99,7 @@ async function run(){
             const result = await myOrdersList.insertOne(orders);
             res.send(result);
         });
+        // buyers section api's
 
         // users
         app.get('/users', async (req, res) => {
@@ -112,25 +113,36 @@ async function run(){
             const result = await usersCollections.insertOne(user);
             res.send(result);
         });
+        // users
 
+        // users categories
         app.get('/users/admin/:email', async (req, res) => {
             const email = req.params.email;
             const query = { email }
             const user = await usersCollections.findOne(query);
             res.send({ isAdmin: user?.role === 'admin' });
-        })
+        });
         app.get('/users/buyer/:email', async (req, res) => {
             const email = req.params.email;
             const query = { email }
             const user = await usersCollections.findOne(query);
             res.send({ isBuyer: user?.role === 'buyer' });
-        })
+        });
         app.get('/users/seller/:email', async (req, res) => {
             const email = req.params.email;
             const query = { email }
             const user = await usersCollections.findOne(query);
             res.send({ isSeller: user?.role === 'seller' });
-        })
+        });
+        // users categories
+
+        // get buyers/sellers
+        app.get('/users/:role', async (req, res) => {
+            const role = req.params.role;
+            const query = { role }
+            const specificUser = await usersCollections.find(query).toArray();
+            res.send(specificUser);
+        });
     }
     finally{
 
