@@ -40,6 +40,7 @@ async function run(){
         const products = client.db('heavyWheel').collection('allProducts');
         const myOrdersList = client.db('heavyWheel').collection('myOrdersList');
         const usersCollections = client.db('heavyWheel').collection('users');
+        const productCollections = client.db('heavyWheel').collection('productCollections');
 
         app.get('/categories', async(req, res) => {
             const query = {};
@@ -144,12 +145,20 @@ async function run(){
             res.send(specificUser);
         });
 
+        // delete users
         app.delete('/users/:id', verifyJWT, async (req, res) => {
             const id = req.params.id;
             const filter = { _id: ObjectId(id) };
             const result = await usersCollections.deleteOne(filter);
             res.send(result);
         })
+
+        // add products
+        app.post("/addProduct", verifyJWT, async (req, res) => {
+            const addProduct = req.body;
+            const result = await productCollections.insertOne(addProduct);
+            res.send(result);
+        });
     }
     finally{
 
