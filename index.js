@@ -40,7 +40,6 @@ async function run(){
         const products = client.db('heavyWheel').collection('allProducts');
         const myOrdersList = client.db('heavyWheel').collection('myOrdersList');
         const usersCollections = client.db('heavyWheel').collection('users');
-        const productCollections = client.db('heavyWheel').collection('productCollections');
 
         app.get('/categories', async(req, res) => {
             const query = {};
@@ -156,8 +155,23 @@ async function run(){
         // add products
         app.post("/addProduct", verifyJWT, async (req, res) => {
             const addProduct = req.body;
-            const result = await productCollections.insertOne(addProduct);
+            const result = await products.insertOne(addProduct);
             res.send(result);
+        });
+
+        // get products
+        app.get('/addProduct', async (req, res) => {
+            const query = {};
+            const products = await products.find(query).toArray();
+            res.send(products);
+        });
+        
+        app.get("/addProduct/:user_id", async (req, res) => {
+            const user_id = req.params.user_id;
+            const query = {user_id:user_id};
+            const cursor = products.find(query);
+            const allProducts = await cursor.toArray();
+            res.send(allProducts);
         });
     }
     finally{
