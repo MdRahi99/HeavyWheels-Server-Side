@@ -182,7 +182,21 @@ async function run(){
             };
             const result = await products.deleteOne(filter);
             res.send(result);
-        })
+        });
+
+        // verify seller
+        app.put('/users/admin/:id', verifyJWT, async (req, res) => {
+            const id = req.params.id;
+            const filter = { _id: ObjectId(id) }
+            const options = { upsert: true };
+            const updatedDoc = {
+                $set: {
+                    status: 'verified'
+                }
+            }
+            const result = await usersCollections.updateOne(filter, updatedDoc, options);
+            res.send(result);
+        });
     }
     finally{
 
