@@ -165,7 +165,7 @@ async function run(){
             const products = await products.find(query).toArray();
             res.send(products);
         });
-        
+
         app.get("/addProduct/:user_id", async (req, res) => {
             const user_id = req.params.user_id;
             const query = {user_id:user_id};
@@ -173,6 +173,16 @@ async function run(){
             const allProducts = await cursor.toArray();
             res.send(allProducts);
         });
+
+        // delete product
+        app.delete('/addProduct/:id',verifyJWT, async(req,res)=>{
+            const id = req.params.id;
+            const filter = {
+              _id: ObjectId(id)
+            };
+            const result = await products.deleteOne(filter);
+            res.send(result);
+        })
     }
     finally{
 
