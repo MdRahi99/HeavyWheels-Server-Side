@@ -193,6 +193,28 @@ async function run(){
             res.send(result);
         });
 
+        // advertise product
+        app.put('/addProduct/seller/:id', verifyJWT, async (req, res) => {
+            const id = req.params.id;
+            const filter = { _id: ObjectId(id) }
+            const options = { upsert: true };
+            const updatedDoc = {
+                $set: {
+                    adsStatus: 'advertised'
+                }
+            }
+            const result = await products.updateOne(filter, updatedDoc, options);
+            res.send(result);
+        });
+
+        app.get("/addProduct/seller/:adsStatus", async (req, res) => {
+            const adsStatus = req.params.adsStatus;
+            const query = {adsStatus:adsStatus};
+            const cursor = products.find(query);
+            const sellerProducts = await cursor.toArray();
+            res.send(sellerProducts);
+          });
+
         // verify seller
         app.put('/users/admin/:id', verifyJWT, async (req, res) => {
             const id = req.params.id;
